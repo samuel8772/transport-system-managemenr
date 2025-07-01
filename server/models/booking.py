@@ -11,7 +11,18 @@ class Booking(db.Model):
     booking_time = db.Column(db.DateTime, default=datetime.utcnow)
     fare_paid = db.Column(db.Float, nullable=False)
     payment_status = db.Column(db.String(20), default='pending')
-    
+
+    # Relationships
+    trip = db.relationship("Trip", back_populates="bookings")
+    passenger = db.relationship("Passenger", back_populates="bookings")
+
+    def __init__(self, trip_id, passenger_id, seat_number, fare_paid, payment_status='pending'):
+        self.trip_id = trip_id
+        self.passenger_id = passenger_id
+        self.seat_number = seat_number
+        self.fare_paid = fare_paid
+        self.payment_status = payment_status
+
     def to_dict(self):
         return {
             'id': self.id,

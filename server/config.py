@@ -5,7 +5,7 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 class Config:
     SQLALCHEMY_DATABASE_URI = os.getenv(
         'DATABASE_URL',
-        f"sqlite:///{os.path.join(basedir, '../instance/matatu_system.db')}"
+        'postgresql://sam:0000@localhost:5432/matatu_db'
     )
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SECRET_KEY = os.getenv('SECRET_KEY', 'your-secret-key-here')

@@ -12,7 +12,7 @@ from server.models.trip import Trip
 from server.models.booking import Booking
 
 def validate_kenyan_phone(phone):
-    pattern = r'^(\+254|0)[7][0-9]{8}$'  # ✅ fixed regex escape
+    pattern = r'^(\+254|0)[7][0-9]{8}$'
     return re.match(pattern, phone) is not None
 
 def validate_email(email):
@@ -46,23 +46,40 @@ def init_sample_data(app):
             Passenger(name="Aisha Mohamed", phone_number="0723456789", email="aisha@email.com"),
             Passenger(name="David Kiprotich", phone_number="0734567890", email="david@email.com")
         ]
-        for r in routes: db.session.add(r)
-        for m in matatus: db.session.add(m)
-        for p in passengers: db.session.add(p)
+        db.session.add_all(routes + matatus + passengers)
         db.session.commit()
 
         base_time = datetime.now().replace(hour=6, minute=0, second=0, microsecond=0)
         trips = [
-            Trip(route_id=1, matatu_id=1, departure_time=base_time, arrival_time=base_time + timedelta(minutes=480), available_seats=14),
-            Trip(route_id=1, matatu_id=2, departure_time=base_time + timedelta(hours=3), arrival_time=base_time + timedelta(hours=3, minutes=480), available_seats=14),
-            Trip(route_id=2, matatu_id=3, departure_time=base_time + timedelta(hours=1), arrival_time=base_time + timedelta(hours=1, minutes=360), available_seats=18),
-            Trip(route_id=3, matatu_id=4, departure_time=base_time + timedelta(hours=2), arrival_time=base_time + timedelta(hours=2, minutes=300), available_seats=14),
-            Trip(route_id=4, matatu_id=1, departure_time=base_time + timedelta(days=1), arrival_time=base_time + timedelta(days=1, minutes=180), available_seats=14)
+            Trip(
+                route_id=1,
+                matatu_id=1,
+                departure_time=base_time,
+                arrival_time=base_time + timedelta(minutes=routes[0].duration),
+                available_seats=matatus[0].capacity,
+                status="scheduled"
+            ),
+            Trip(
+                route_id=2,
+                matatu_id=2,
+                departure_time=base_time + timedelta(hours=2),
+                arrival_time=base_time + timedelta(hours=2, minutes=routes[1].duration),
+                available_seats=matatus[1].capacity,
+                status="scheduled"
+            ),
+            Trip(
+                route_id=3,
+                matatu_id=3,
+                departure_time=base_time + timedelta(hours=4),
+                arrival_time=base_time + timedelta(hours=4, minutes=routes[2].duration),
+                available_seats=matatus[2].capacity,
+                status="scheduled"
+            )
         ]
-        for t in trips: db.session.add(t)
+        db.session.add_all(trips)
         db.session.commit()
 
-# ✅ Role-based decorator using session
+# Role-based access control decorator
 def role_required(required_role):
     def decorator(fn):
         @wraps(fn)

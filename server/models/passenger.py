@@ -8,8 +8,18 @@ class Passenger(db.Model):
     phone_number = db.Column(db.String(15), nullable=False)
     email = db.Column(db.String(120), nullable=True)
     
-    bookings = db.relationship('Booking', backref='passenger', lazy=True, cascade='all, delete-orphan')
-    
+    bookings = db.relationship(
+        'Booking',
+        back_populates='passenger',
+        lazy=True,
+        cascade='all, delete-orphan'
+    )
+
+    def __init__(self, name, phone_number, email=None):
+        self.name = name
+        self.phone_number = phone_number
+        self.email = email
+
     def to_dict(self):
         return {
             'id': self.id,
