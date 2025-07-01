@@ -1,0 +1,28 @@
+services:
+  - type: web
+    name: matatu-backend
+    env: python
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "gunicorn server.app:app"
+    envVars:
+      - key: FLASK_ENV
+        value: production
+    plan: free
+    region: oregon
+    runtime: python
+    branch: main
+    repo: https://github.com/samuel8772/transport-system-managemenr
+    buildFilter:
+      paths:
+        - server/**
+
+  - type: web
+    name: matatu-frontend
+    env: static
+    buildCommand: "npm install && npm run build"
+    staticPublishPath: "client/build"
+    branch: main
+    repo: https://github.com/samuel8772/transport-system-managemenr
+    buildFilter:
+      paths:
+        - client/**
