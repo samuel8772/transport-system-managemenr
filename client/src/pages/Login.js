@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom'; // ✅ import navigate
 
 function Login() {
   const [formData, setFormData] = useState({
@@ -6,6 +7,7 @@ function Login() {
     password: ''
   });
   const [message, setMessage] = useState('');
+  const navigate = useNavigate(); // ✅ hook to redirect
 
   function handleChange(e) {
     setFormData({
@@ -27,7 +29,9 @@ function Login() {
         if (data.error) {
           setMessage(`❌ ${data.error}`);
         } else {
+          localStorage.setItem('token', data.access_token); // ✅ store token
           setMessage(`✅ Welcome back, ${data.username}!`);
+          navigate('/trips'); // ✅ redirect after login
         }
       })
       .catch(() => setMessage('❌ Something went wrong. Try again.'));

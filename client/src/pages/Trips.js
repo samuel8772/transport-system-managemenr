@@ -20,25 +20,33 @@ function Trips() {
       return;
     }
 
+    const token = localStorage.getItem('token');
+
     fetch('/api/bookings', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
       body: JSON.stringify({
         trip_id: selectedTrip.id,
         seat_number: seatNumber
       })
     })
-      .then(res => res.json())
-      .then(data => {
-        if (data.error) {
-          setMessage(`❌ ${data.error}`);
+      .then(async res => {
+        const data = await res.json();
+        if (!res.ok) {
+          setMessage(`❌ ${data.error || data.message || 'Unknown error occurred'}`);
         } else {
           setMessage('✅ Seat booked successfully!');
           setSeatNumber('');
           setSelectedTrip(null);
         }
       })
-      .catch(() => setMessage('❌ Booking failed'));
+      .catch((err) => {
+        console.error("Booking error:", err);
+        setMessage('❌ Booking failed (server not responding)');
+      });
   };
 
   return (

@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 function Home() {
   const [message, setMessage] = useState('Loading...');
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetch('/api/test')
@@ -24,11 +26,25 @@ function Home() {
     padding: '20px'
   };
 
+  const buttonStyle = {
+    marginTop: '20px',
+    padding: '12px 24px',
+    fontSize: '1.1rem',
+    backgroundColor: '#007bff',
+    color: '#fff',
+    border: 'none',
+    borderRadius: '8px',
+    cursor: 'pointer'
+  };
+
   return (
     <div style={backgroundStyle}>
       <h1>🚌 Matatu System</h1>
       <p>{message}</p>
       <p>Book your matatu seat easily and quickly.</p>
+      <button style={buttonStyle} onClick={() => navigate('/trips')}>
+        Get Started
+      </button>
     </div>
   );
 }
