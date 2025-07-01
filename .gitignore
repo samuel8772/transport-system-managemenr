@@ -1,0 +1,18 @@
+# Ignore Python bytecode and cache
+__pycache__/
+*.py[cod]
+
+# Ignore virtual environments
+venv/
+.env
+*.env
+
+# Ignore SQLite database files
+instance/
+*.db
+
+# Ignore system files
+.DS_Store
+
+# Ignore migrations cache
+migrations/__pycache__/
