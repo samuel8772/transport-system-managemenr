@@ -28,8 +28,9 @@ def create_app():
 
     return app
 
-app = create_app()
-init_sample_data(app)
-
+# ✅ DO NOT RUN APP OR INIT DATA HERE — Let CLI (flask run, flask db) control it.
+# If you want to run the app directly, use this section:
 if __name__ == '__main__':
+    app = create_app()
+    init_sample_data(app)
     app.run(debug=True)
